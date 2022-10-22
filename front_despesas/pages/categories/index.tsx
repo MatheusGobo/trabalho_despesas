@@ -7,6 +7,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+
+// Material Icons
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditIcon from "@mui/icons-material/Edit";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -87,26 +94,31 @@ function CategorieList() {
   if (isLoading) return <p>Carregando</p>
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell align="center">ID</StyledTableCell>
-            <StyledTableCell align="right">Name</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {
-            categories.map((categorie) => (
-              <StyledTableRow key={categorie.id} >
-                <StyledTableCell align="right">{categorie.id}</StyledTableCell>
-                <StyledTableCell align="right">{categorie.name}</StyledTableCell>
-              </StyledTableRow>
-            ))
-          }
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell align="center">ID</StyledTableCell>
+              <StyledTableCell align="left">Name</StyledTableCell>
+              <StyledTableCell align="right"></StyledTableCell>
+
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {
+              categories.map((categorie) => (
+                <StyledTableRow key={categorie.id} >
+                  <StyledTableCell align="center">{categorie.id}</StyledTableCell>
+                  <StyledTableCell align="left">{categorie.name}</StyledTableCell>
+                  <StyledTableCell align="right"><Button variant="contained" href="#contained-buttons" color="error" size="small"><DeleteForeverIcon fontSize="small" />Delete</Button></StyledTableCell>
+                </StyledTableRow>
+              ))
+            }
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   )
 }
 
