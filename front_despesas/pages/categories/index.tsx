@@ -87,27 +87,27 @@ function CategorieList() {
   if (isLoading) return <p>Carregando</p>
 
   return (
-    <TableContainer component= { Paper } >
-    <Table sx={ { minWidth: 700 } } aria - label="customized table" >
-      <TableHead>
-      <TableRow>
-      <StyledTableCell align="center" > ID < /StyledTableCell>
-        < StyledTableCell align = "right" > Name < /StyledTableCell>
-          < /TableRow>
-          < /TableHead>
-          <TableBody>
-  {
-    categories.map((categorie) => (
-      <StyledTableRow key= { categorie.id } >
-      <StyledTableCell align="right" > { categorie.id } < /StyledTableCell>
-    < StyledTableCell align = "right" > { categorie.name } < /StyledTableCell>
-    < /StyledTableRow>
-    ))
-  }
-  </TableBody>
-    < /Table>
-    < /TableContainer>
-   )
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell align="center">ID</StyledTableCell>
+            <StyledTableCell align="right">Name</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {
+            categories.map((categorie) => (
+              <StyledTableRow key={categorie.id} >
+                <StyledTableCell align="right">{categorie.id}</StyledTableCell>
+                <StyledTableCell align="right">{categorie.name}</StyledTableCell>
+              </StyledTableRow>
+            ))
+          }
+        </TableBody>
+      </Table>
+    </TableContainer>
+  )
 }
 
 export default CategorieList;
