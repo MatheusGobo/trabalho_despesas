@@ -13,7 +13,8 @@ import Button from '@mui/material/Button';
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 import { useEffect, useState } from "react";
-import CategoryService from "../../src/services/CategoryService";
+import ExpenseService from "../../src/services/ExpenseService";
+import FormDialog from '../../src/components/FormExpense';
 //import { toast } from 'react-toastify';
 
 
@@ -37,41 +38,48 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-
-interface Category {
+interface Category{
   id: number;
   name: string;
+  update_at: string;
+}
+
+interface Expense {
+  id: number;
+  name: string;
+  price: number;
+  category: Category;
   updated_at: string;
 }
 
 
 function CategorieList() {
 
-  const [categories, setCategories] = useState<Category[]>([])
+  const [expenses, setExpenses] = useState<Expense[]>([])
   const [isLoading, setIsLoading] = useState(true);
 
-  const getCategories = async () => {
-    let data = await CategoryService.getAll()
+  const getExpenses = async () => {
+    let data = await ExpenseService.getAll()
 
-    setCategories(data)
+    setExpenses(data)
   }
 
   useEffect(() => {
-    getCategories().then(() => {
+    getExpenses().then(() => {
       setIsLoading(false)
     })
 
   }, [])
 
-  const deleteCategory = (category: Category) => {
+  const deleteExpense = (expense: Expense) => {
 
-    var result = confirm(`Você realmente gostaria de deletar a categoria: ${category.name}`)
+    var result = confirm(`Você realmente gostaria de deletar a categoria: ${expense.name}`)
 
     if (!result) return
 
     setIsLoading(true);
-    CategoryService.destroy(category.id).then((data) => {
-      getCategories().then(() => {
+    ExpenseService.destroy(expense.id).then((data) => {
+      getExpenses().then(() => {
         setIsLoading(false)
         console.log('Categorie destroyled Success')
 
@@ -83,31 +91,36 @@ function CategorieList() {
     })
   }
 
-
+  
   if (isLoading) return <p>Carregando</p>
 
   return (
     <>
+      <FormDialog />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
               <StyledTableCell align="center">ID</StyledTableCell>
               <StyledTableCell align="left">Name</StyledTableCell>
+              <StyledTableCell align="left">Price</StyledTableCell>
               <StyledTableCell align="left">Last Modified</StyledTableCell>
+              <StyledTableCell align="left">Category</StyledTableCell>
               <StyledTableCell align="right"></StyledTableCell>
 
             </TableRow>
           </TableHead>
           <TableBody>
             {
-              categories.map((category) => (
-                <StyledTableRow key={category.id} >
-                  <StyledTableCell align="center">{category.id}</StyledTableCell>
-                  <StyledTableCell align="left">{category.name}</StyledTableCell>
-                  <StyledTableCell align="left">{category.updated_at}</StyledTableCell>
+              expenses.map((expense: Expense) => (
+                <StyledTableRow key={expense.id} >
+                  <StyledTableCell align="center">{expense.id}</StyledTableCell>
+                  <StyledTableCell align="left">{expense.name}</StyledTableCell>
+                  <StyledTableCell align="left">{expense.price}</StyledTableCell>
+                  <StyledTableCell align="left">{expense.updated_at}</StyledTableCell>
+                  <StyledTableCell align="left">{expense.category.name}</StyledTableCell>
                   <StyledTableCell align="right">
-                      <Button variant="contained" href="#contained-buttons" color="error" size="small" onClick={() => deleteCategory(category)}>
+                      <Button variant="contained" href="#contained-buttons" color="error" size="small" onClick={() => deleteExpense(expense)}>
                           <DeleteForeverIcon fontSize="small" />Delete
                       </Button>
                   </StyledTableCell>

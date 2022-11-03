@@ -1,9 +1,9 @@
 const ROUTES = {
-   articles: {
-      list: `/articles`,
-      new: `/articles/new`,
-      show: `/articles/[id]`,
-      edit: `/articles/[id]/edit`,
+   expenses: {
+      list: `/expenses`,
+      new: `/expenses/new`,
+      show: `/expenses/[id]`,
+      edit: `/expenses/[id]/edit`,
    },
    categories: {
       list: `/categories`,

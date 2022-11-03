@@ -1,32 +1,32 @@
 import axiosInstance from "../utils/axios"
 
-const CategorieService = {
+const CategoryService = {
 
    getAll: async () => {
       let response = await axiosInstance.get('/categories')
 
       return response.data
    },
-   getById: async (id) => {
+   getById: async (id: number) => {
       if (!id) return
 
       let response = await axiosInstance.get(`/categories/${id}`)
       return response.data
    },
-   create: async (category) => {
+   create: async (category: String) => {
       if (!category) return
 
       let response = await axiosInstance.post(`/categories`, { category: category })
       return response
    },
-   destroy: async (id) => {
+   destroy: async (id: number) => {
       if (!id) return
 
       let response = await axiosInstance.delete(`/categories/${id}`)
       return response
 
    },
-   update: async (id, categorie) => {
+   update: async (id: number, categorie: String) => {
       if (!id) return
 
       let response = await axiosInstance.put(`/categories/${id}`, { category: categorie })
@@ -35,4 +35,4 @@ const CategorieService = {
    }
 }
 
-export default CategorieService
+export default CategoryService
