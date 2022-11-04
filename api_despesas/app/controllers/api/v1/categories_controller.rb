@@ -34,8 +34,8 @@ class Api::V1::CategoriesController < ApplicationController
   end
 
   # DELETE /categories/1
-  def destroy
-    @category.destroy
+  def destroy 
+    @category.destroy 
   end
 
   private

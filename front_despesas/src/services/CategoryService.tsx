@@ -1,5 +1,10 @@
 import axiosInstance from "../utils/axios"
 
+
+interface Category {
+   name: string
+}
+
 const CategoryService = {
 
    getAll: async () => {
@@ -13,7 +18,7 @@ const CategoryService = {
       let response = await axiosInstance.get(`/categories/${id}`)
       return response.data
    },
-   create: async (category: String) => {
+   create: async (category: Category) => {
       if (!category) return
 
       let response = await axiosInstance.post(`/categories`, { category: category })
@@ -23,6 +28,7 @@ const CategoryService = {
       if (!id) return
 
       let response = await axiosInstance.delete(`/categories/${id}`)
+      
       return response
 
    },

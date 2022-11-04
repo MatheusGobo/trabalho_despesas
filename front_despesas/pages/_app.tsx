@@ -1,5 +1,7 @@
 import * as React from 'react';
 import Head from 'next/head';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 import { AppProps } from 'next/app';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -28,6 +30,18 @@ function MyApp(props: MyAppProps) {
         <CssBaseline />
         {/* <MiniDrawer/> */}
         <Component {...pageProps} />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
               
       </ThemeProvider>
     </CacheProvider>

@@ -14,7 +14,9 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 import { useEffect, useState } from "react";
 import CategoryService from "../../src/services/CategoryService";
-//import { toast } from 'react-toastify';
+import FormCategory from '../../src/components/FormCategory';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -44,6 +46,9 @@ interface Category {
   updated_at: string;
 }
 
+interface CategoryProps {
+  name: string;
+}
 
 function CategorieList() {
 
@@ -70,24 +75,38 @@ function CategorieList() {
     if (!result) return
 
     setIsLoading(true);
-    CategoryService.destroy(category.id).then((data) => {
-      getCategories().then(() => {
-        setIsLoading(false)
-        console.log('Categorie destroyled Success')
-
-        //toast.success('Categorie destroyled Success')
-      }).catch((e) => {
-        console.error(e)
-        //toast.error('Error delete Categorie');
+    
+    CategoryService.destroy(category.id)
+      .then((data) => {
+        getCategories().then(() => {
+          setIsLoading(false)
+          toast.success('Category destroyled Success')
+        })
       })
-    })
+      .catch((e) => {
+          setIsLoading(false)
+          toast.error('Error delete Category');
+      })
   }
 
+  const insertCategory = (category: CategoryProps) => {
+    CategoryService.create(category)
+    .then((data) => {
+      getCategories().then(() => {
+        setIsLoading(false)
+        toast.success('Category Create Success')
+      })
+    }).catch((e) => {
+        setIsLoading(false)
+        toast.error('Error to create Category');
+    })
+  }
 
   if (isLoading) return <p>Carregando</p>
 
   return (
     <>
+      <FormCategory onInputValueChange={insertCategory}  />
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>

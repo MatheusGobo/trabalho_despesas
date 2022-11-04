@@ -15,7 +15,8 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useEffect, useState } from "react";
 import ExpenseService from "../../src/services/ExpenseService";
 import FormDialog from '../../src/components/FormExpense';
-//import { toast } from 'react-toastify';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -52,6 +53,12 @@ interface Expense {
   updated_at: string;
 }
 
+interface ExpenseProps {
+  name: string;
+  price: number;
+  category_id: number;
+}
+
 
 function CategorieList() {
 
@@ -81,22 +88,36 @@ function CategorieList() {
     ExpenseService.destroy(expense.id).then((data) => {
       getExpenses().then(() => {
         setIsLoading(false)
-        console.log('Categorie destroyled Success')
-
-        //toast.success('Categorie destroyled Success')
+        
+        toast.success('Expense destroyled Success')
       }).catch((e) => {
-        console.error(e)
-        //toast.error('Error delete Categorie');
+        setIsLoading(false)
+        
+        toast.error('Error delete Expense');
       })
     })
   }
 
-  
+  const insertExpense = (expense: ExpenseProps) => {
+    ExpenseService.create(expense)
+    .then((data) => {
+      getExpenses().then(() => {
+        setIsLoading(false)
+        toast.success('Expense Create Success')
+      })
+    }).catch((e) => {
+        setIsLoading(false)
+        toast.error('Error to create Expense');
+    })
+  }
+ 
   if (isLoading) return <p>Carregando</p>
 
   return (
     <>
-      <FormDialog />
+      <div>
+        <FormDialog onInputValueChange={insertExpense} />
+      </div>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>

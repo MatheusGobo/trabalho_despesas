@@ -10,35 +10,22 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import MenuItem from '@mui/material/MenuItem';
 import DialogTitle from '@mui/material/DialogTitle';
 import Box from "@mui/material/Box";
 
-
-// ROTA
-import ROUTES from "../../src/config/routes";
-
 // IMPORTAÇÕES SERVICES
-import ExpenseService from '../services/ExpenseService';
 import CategoryService from '../services/CategoryService';
 
 interface Category{
-  id: number;
   name: string;
 }
 
-interface Expense {
-  name: string;
-  price: number;
-  category_id: number;
+interface CategoryProps {
+  onInputValueChange(category: Category): void;
 }
 
-interface ExpenseProps{
-  onInputValueChange(category: Expense): void;
-}
-
-export default function FormDialog(props: ExpenseProps) {
-
+export default function FormCategory(props: CategoryProps) {
+  const router = useRouter()
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [category, setCategory] = useState('');
@@ -56,41 +43,27 @@ export default function FormDialog(props: ExpenseProps) {
 
     const formData = new FormData(event.target as HTMLFormElement);
     const data = Object.fromEntries(formData);
+   
 
-    console.log({ email: formData.get("name"), password: formData.get("category") });
-
-    const expense: Expense = { 
-          name: String(data.name), 
-          price: Number(data.price), 
-          category_id: Number(data.category)
+    const category: Category = { 
+          name: String(data.name)
         };
-
-    props.onInputValueChange(expense);
+ 
+    props.onInputValueChange(category);
     setOpen(false);
   };
          
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-     setCategory(event.target.value);
-   };
-
   useEffect(() => {
     CategoryService.getAll().then((data) => setCategories(data))
   }, []);
 
- 
-  const insertExpense = (expense: Expense) => {
-    ExpenseService.create(expense).then((data) => {
-      setOpen(false);
-    }).catch((e) => console.error(e))
-  }
-
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen}>
-        Registrar Nova Saída
+        Registrar Nova Categoria
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Nova Saida</DialogTitle>
+        <DialogTitle>Nova Categoria</DialogTitle>
         <DialogContent>
           <Box
             component="form"
@@ -103,48 +76,19 @@ export default function FormDialog(props: ExpenseProps) {
             autoFocus
             id="name"
             name="name"
-            label="Descrição Saida"
+            label="Nome"
             type="text"
             fullWidth
             variant="standard"
             required
           />
-          <TextField
-            margin="normal"
-            className="field"
-            autoFocus
-            id="price"
-            name="price"
-            label="Valor"
-            type="number"
-            fullWidth
-            variant="standard"
-            required
-          />
-          <TextField
-          margin="normal"
-          id="category"
-          name="category"
-          select
-          label="Categoria"
-          value={category}
-          onChange={handleChange}
-          fullWidth
-          required
-          >
-          {categories.map((category) => (
-            <MenuItem key={category.id} value={category.id}>
-              {category.name}
-            </MenuItem>
-          ))}
-          </TextField>
           <DialogActions>
           <Button
               type="submit"
               fullWidth
               variant="contained"
             >
-              Cadastrar Saida
+              Cadastrar Categoria
             </Button>
           </DialogActions>
         </Box>
