@@ -16,7 +16,8 @@ import { useEffect, useState } from "react";
 import CategoryService from "../../src/services/CategoryService";
 import FormCategory from '../../src/components/FormCategory';
 import { toast } from 'react-toastify';
-import { AxiosError } from 'axios';
+import { Container, Grid, Typography } from '@mui/material';
+import { Edit } from '@mui/icons-material';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -51,7 +52,7 @@ interface CategoryProps {
 }
 
 function CategorieList() {
-
+  const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([])
   const [isLoading, setIsLoading] = useState(true);
 
@@ -75,7 +76,7 @@ function CategorieList() {
     if (!result) return
 
     setIsLoading(true);
-    
+
     CategoryService.destroy(category.id)
       .then((data) => {
         getCategories().then(() => {
@@ -84,59 +85,98 @@ function CategorieList() {
         })
       })
       .catch((e) => {
-          setIsLoading(false)
-          toast.error('Error delete Category');
+        setIsLoading(false)
+        toast.error('Error delete Category');
       })
   }
 
   const insertCategory = (category: CategoryProps) => {
     CategoryService.create(category)
-    .then((data) => {
-      getCategories().then(() => {
-        setIsLoading(false)
-        toast.success('Category Create Success')
-      })
-    }).catch((e) => {
+      .then((data) => {
+        getCategories().then(() => {
+          setIsLoading(false)
+          toast.success('Category Create Success')
+          handleClose()
+        })
+      }).catch((e) => {
         setIsLoading(false)
         toast.error('Error to create Category');
-    })
+      })
   }
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   if (isLoading) return <p>Carregando</p>
 
   return (
     <>
-      <FormCategory onInputValueChange={insertCategory}  />
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center">ID</StyledTableCell>
-              <StyledTableCell align="left">Name</StyledTableCell>
-              <StyledTableCell align="left">Last Modified</StyledTableCell>
-              <StyledTableCell align="right"></StyledTableCell>
+      <Container>
+        <Grid container mt={2}>
+          <Grid item xs={6} mb={4}>
+            <Typography
+              variant="h4"
+            >
+              Categories List
+            </Typography>
+          </Grid>
+          <Grid container mb={2}>
+            <Button
+              variant="outlined"
+              onClick={handleClickOpen}
+            >
 
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {
-              categories.map((category) => (
-                <StyledTableRow key={category.id} >
-                  <StyledTableCell align="center">{category.id}</StyledTableCell>
-                  <StyledTableCell align="left">{category.name}</StyledTableCell>
-                  <StyledTableCell align="left">{category.updated_at}</StyledTableCell>
-                  <StyledTableCell align="right">
-                      <Button variant="contained" href="#contained-buttons" color="error" size="small" onClick={() => deleteCategory(category)}>
+              Registrar Nova Categoria
+            </Button>
+          </Grid>
+          <FormCategory 
+              onInputValueChange={insertCategory} 
+              handleClickOpen={handleClickOpen} 
+              handleClose={handleClose}
+              value={open} />
+              
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell align="center">ID</StyledTableCell>
+                  <StyledTableCell align="left">Name</StyledTableCell>
+                  <StyledTableCell align="left">Last Modified</StyledTableCell>
+                  <StyledTableCell align="right"></StyledTableCell>
+
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {
+                  categories.map((category) => (
+                    <StyledTableRow key={category.id} >
+                      <StyledTableCell align="center">{category.id}</StyledTableCell>
+                      <StyledTableCell align="left">{category.name}</StyledTableCell>
+                      <StyledTableCell align="left">{category.updated_at}</StyledTableCell>
+                      <StyledTableCell align="right">
+                        <Button variant="contained" href="#contained-buttons" color="warning" size="small" onClick={() => editCategory(category)}>
+                          <Edit fontSize="small" />Edit
+                        </Button>
+
+                        <Button variant="contained" href="#contained-buttons" color="error" size="small" onClick={() => deleteCategory(category)}>
                           <DeleteForeverIcon fontSize="small" />Delete
-                      </Button>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))
-            }
-          </TableBody>
-        </Table>
-      </TableContainer>
+                        </Button>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))
+                }
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+      </Container>
     </>
+
   )
 }
 

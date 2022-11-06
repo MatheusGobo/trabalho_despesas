@@ -15,6 +15,7 @@ import Box from "@mui/material/Box";
 
 // IMPORTAÇÕES SERVICES
 import CategoryService from '../services/CategoryService';
+import { Grid } from "@mui/material";
 
 interface Category{
   name: string;
@@ -22,22 +23,15 @@ interface Category{
 
 interface CategoryProps {
   onInputValueChange(category: Category): void;
+  value: boolean;
+  handleClickOpen(): void;
+  handleClose(): void;
 }
 
 export default function FormCategory(props: CategoryProps) {
-  const router = useRouter()
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [category, setCategory] = useState('');
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+  
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
 
@@ -50,7 +44,7 @@ export default function FormCategory(props: CategoryProps) {
         };
  
     props.onInputValueChange(category);
-    setOpen(false);
+    props.handleClickOpen();
   };
          
   useEffect(() => {
@@ -59,10 +53,7 @@ export default function FormCategory(props: CategoryProps) {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Registrar Nova Categoria
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={props.value} onClose={props.handleClose}>
         <DialogTitle>Nova Categoria</DialogTitle>
         <DialogContent>
           <Box
