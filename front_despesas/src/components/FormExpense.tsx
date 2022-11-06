@@ -35,21 +35,16 @@ interface Expense {
 
 interface ExpenseProps{
   onInputValueChange(category: Expense): void;
+  value: boolean;
+  handleClickOpen(): void;
+  handleClose(): void;
 }
 
-export default function FormDialog(props: ExpenseProps) {
+export default function FormExpense(props: ExpenseProps) {
 
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [category, setCategory] = useState('');
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -86,10 +81,7 @@ export default function FormDialog(props: ExpenseProps) {
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Registrar Nova Saída
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={props.value} onClose={props.handleClose}>
         <DialogTitle>Nova Saida</DialogTitle>
         <DialogContent>
           <Box

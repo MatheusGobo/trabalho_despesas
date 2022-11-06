@@ -17,6 +17,8 @@ import ExpenseService from "../../src/services/ExpenseService";
 import FormDialog from '../../src/components/FormExpense';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
+import { Container, Grid, Typography } from '@mui/material';
+import FormExpense from '../../src/components/FormExpense';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -39,7 +41,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-interface Category{
+interface Category {
   id: number;
   name: string;
   update_at: string;
@@ -62,6 +64,7 @@ interface ExpenseProps {
 
 function CategorieList() {
 
+  const [open, setOpen] = useState(false);
   const [expenses, setExpenses] = useState<Expense[]>([])
   const [isLoading, setIsLoading] = useState(true);
 
@@ -88,11 +91,11 @@ function CategorieList() {
     ExpenseService.destroy(expense.id).then((data) => {
       getExpenses().then(() => {
         setIsLoading(false)
-        
+
         toast.success('Expense destroyled Success')
       }).catch((e) => {
         setIsLoading(false)
-        
+
         toast.error('Error delete Expense');
       })
     })
@@ -100,57 +103,90 @@ function CategorieList() {
 
   const insertExpense = (expense: ExpenseProps) => {
     ExpenseService.create(expense)
-    .then((data) => {
-      getExpenses().then(() => {
-        setIsLoading(false)
-        toast.success('Expense Create Success')
-      })
-    }).catch((e) => {
+      .then((data) => {
+        getExpenses().then(() => {
+          setIsLoading(false)
+          toast.success('Expense Create Success')
+          handleClose
+        })
+      }).catch((e) => {
         setIsLoading(false)
         toast.error('Error to create Expense');
-    })
+        handleClose
+      })
   }
- 
+
   if (isLoading) return <p>Carregando</p>
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
-      <div>
-        <FormDialog onInputValueChange={insertExpense} />
-      </div>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center">ID</StyledTableCell>
-              <StyledTableCell align="left">Name</StyledTableCell>
-              <StyledTableCell align="left">Price</StyledTableCell>
-              <StyledTableCell align="left">Last Modified</StyledTableCell>
-              <StyledTableCell align="left">Category</StyledTableCell>
-              <StyledTableCell align="right"></StyledTableCell>
+      <Container>
+        <Grid container mt={2}>
+          <Grid item xs={6} mb={4}>
+            <Typography
+              variant="h4"
+            >
+              Expenses List
+            </Typography>
+          </Grid>
+          <Grid container mb={2}>
+            <Button
+              variant="outlined"
+              onClick={handleClickOpen}
+            >
 
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {
-              expenses.map((expense: Expense) => (
-                <StyledTableRow key={expense.id} >
-                  <StyledTableCell align="center">{expense.id}</StyledTableCell>
-                  <StyledTableCell align="left">{expense.name}</StyledTableCell>
-                  <StyledTableCell align="left">{expense.price}</StyledTableCell>
-                  <StyledTableCell align="left">{expense.updated_at}</StyledTableCell>
-                  <StyledTableCell align="left">{expense.category.name}</StyledTableCell>
-                  <StyledTableCell align="right">
-                      <Button variant="contained" href="#contained-buttons" color="error" size="small" onClick={() => deleteExpense(expense)}>
+              Registrar Nova Saída
+            </Button>
+          </Grid>
+          <FormExpense
+              onInputValueChange={insertExpense} 
+              handleClickOpen={handleClickOpen} 
+              handleClose={handleClose}
+              value={open} />
+
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell align="center">ID</StyledTableCell>
+                  <StyledTableCell align="left">Name</StyledTableCell>
+                  <StyledTableCell align="left">Price</StyledTableCell>
+                  <StyledTableCell align="left">Last Modified</StyledTableCell>
+                  <StyledTableCell align="left">Category</StyledTableCell>
+                  <StyledTableCell align="right"></StyledTableCell>
+
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {
+                  expenses.map((expense: Expense) => (
+                    <StyledTableRow key={expense.id} >
+                      <StyledTableCell align="center">{expense.id}</StyledTableCell>
+                      <StyledTableCell align="left">{expense.name}</StyledTableCell>
+                      <StyledTableCell align="left">{expense.price}</StyledTableCell>
+                      <StyledTableCell align="left">{expense.updated_at}</StyledTableCell>
+                      <StyledTableCell align="left">{expense.category.name}</StyledTableCell>
+                      <StyledTableCell align="right">
+                        <Button variant="contained" href="#contained-buttons" color="error" size="small" onClick={() => deleteExpense(expense)}>
                           <DeleteForeverIcon fontSize="small" />Delete
-                      </Button>
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))
-            }
-          </TableBody>
-        </Table>
-      </TableContainer>
+                        </Button>
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))
+                }
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+      </Container>
     </>
   )
 }

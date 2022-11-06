@@ -16,7 +16,7 @@ import { useEffect, useState } from "react";
 import CategoryService from "../../src/services/CategoryService";
 import FormCategory from '../../src/components/FormCategory';
 import { toast } from 'react-toastify';
-import { Container, Grid, Typography } from '@mui/material';
+import { Box, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField, Typography } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 
 
@@ -139,7 +139,7 @@ function CategorieList() {
               handleClickOpen={handleClickOpen} 
               handleClose={handleClose}
               value={open} />
-              
+
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
               <TableHead>
@@ -159,10 +159,6 @@ function CategorieList() {
                       <StyledTableCell align="left">{category.name}</StyledTableCell>
                       <StyledTableCell align="left">{category.updated_at}</StyledTableCell>
                       <StyledTableCell align="right">
-                        <Button variant="contained" href="#contained-buttons" color="warning" size="small" onClick={() => editCategory(category)}>
-                          <Edit fontSize="small" />Edit
-                        </Button>
-
                         <Button variant="contained" href="#contained-buttons" color="error" size="small" onClick={() => deleteCategory(category)}>
                           <DeleteForeverIcon fontSize="small" />Delete
                         </Button>

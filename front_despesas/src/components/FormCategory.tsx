@@ -15,20 +15,19 @@ import Box from "@mui/material/Box";
 
 // IMPORTAÇÕES SERVICES
 import CategoryService from '../services/CategoryService';
-import { Grid } from "@mui/material";
 
 interface Category{
   name: string;
 }
 
-interface CategoryProps {
+interface IndexProps {
   onInputValueChange(category: Category): void;
   value: boolean;
   handleClickOpen(): void;
   handleClose(): void;
 }
 
-export default function FormCategory(props: CategoryProps) {
+export default function FormCategory(props: IndexProps) {
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   
